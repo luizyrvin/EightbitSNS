@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeline</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+</head>
+<body>
+    <div class="container mt-5">
+        <!-- 検索バー -->
+        <form th:action="@{/search}" method="get">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="キーワードで検索" name="keyword">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="submit">Search</button>
+                </div>
+            </div>
+        </form>
+        <form th:action="@{/logout}" method="post" class="text-right">
+            <button type="submit" class="btn btn-outline-danger">ログアウト</button>
+        </form>
+        
+	    <!-- タイムラインのツイート表示 -->
+        <div class="row">
+            <div class="col-md-6 tweet-card" th:each="tweet : ${tweets}">
+            
+                <a th:href="@{'/tweet/' + ${tweet.getTweetId()}}" class="tweet-link">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${tweet.getUserName()}"></h5>
+                            <p class="card-text small-text">投稿者ID:
+                                <a th:href="@{'/profile/' + ${tweet.getUserId()}}" class="profile-link" th:text="${tweet.getTweetUserId()}"></a>
+                            </p>
+                            <p class="card-text" th:text="${tweet.tweetText}"></p>
+                            
+                         
+                            <div class="row align-items-center">
+                            
+                                <div class="col mt-5">
+                                    <!-- いいねボタン -->
+                                    <input type="hidden" name="userId" th:value="${tweet.getUserId()}">     
+                                    <input type="hidden" name="tweetId" th:value="${tweet.getTweetId()}">
+                                    <button class="btn btn-danger btn-sm like-button" type="submit">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                    <!-- いいね数 -->
+									<span class="ml-2" id="likes-count-${tweet.getTweetId()}" th:text="${tweet.getLikes()}"></span>
+                                </div>
+                                <div class="col mt-5">
+                                    <!-- コメントボタン -->
+                                    <form th:action="@{/comment}" method="post" class="d-inline">
+                                        <input type="hidden" name="userId" th:value="${tweet.getUserId()}">     
+                                        <input type="hidden" name= "tweetId" th:value="${tweet.getTweetId()}">
+                                        <button class="btn btn-primary btn-sm comment-button" type="submit">
+                                            <i class="fas fa-comment"></i>
+                                        </button>
+                                    </form>
+                                    <!-- コメント数 -->
+                                    <span class="ml-2" th:text="${tweet.getComments()}"></span>
+                                </div>
+                                <div class="col mt-5">
+                                    <!-- リツイートボタン -->
+                                    <form th:action="@{/retweet}" method="post" class="d-inline">
+                                        <input type="hidden" name="userId" th:value="${tweet.getUserId()}">     
+                                        <input type="hidden" name="tweetId" th:value="${tweet.getTweetId()}">
+                                        <button class="btn btn-success btn-sm retweet-button" type="submit">
+                                            <i class="fas fa-retweet"></i>
+                                        </button>
+                                    </form>
+                                    <!-- リツイート数 -->
+                                    <span class="ml-2" th:text="${tweet.getRetweets()}"></span>
+                                </div>
+                            </div>
+                            <div class="card-text-container">
+                                <p class="card-text text-sm-right small-text mb-0 text-gray" th:text="${#temporals.format(tweet.getPostDate(), 'M月d日H:mm')}"></p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        
+        
+                <!-- ツイート詳細用のモーダル -->
+        <div class="modal fade" id="tweetModal" tabindex="-1" aria-labelledby="tweetModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tweetModalLabel">ツイート詳細</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="tweetDetailBody">
+					<!-- ツイート詳細コンテンツをここに表示 -->
+					<div class="container">
+					    <h1>ツイート詳細</h1>
+					    <div class="tweet-details">
+					    <p>ユーザー名: <span id="tweetUserName"></span></p>
+                        <p>ユーザーID: <span id="tweetUserId"></span></p>
+                        <p>ツイートのID: <span id="tweetId"></span></p>
+                        <p>ツイート内容: <span id="tweetText"></span></p>
+					    </div>
+					</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+  
+        <!-- ツイート投稿フォームの表示トグル -->
+        <div class="text-center mb-3">
+            <button id="toggleTweetForm" class="btn btn-primary">ツイートする</button>
+        </div>
+
+        <!-- ツイート投稿フォーム -->
+        <div id="tweetForm" style="display: none;">
+            <form th:action="@{/posttweet}" method="post">
+                <input type="hidden" name="userId" th:value="${userId}">
+                <input type="hidden" name="tweetUserId" th:value="${tweetUserId}">
+                <input type="hidden" name="username" th:value="${username}">  
+                <div class="form-group">
+                    <label for="tweetText">ツイート内容:</label>
+                    <textarea class="form-control" id="tweetText" name="tweetText" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">投稿する</button>
+            </form>
+        </div>
+
+    </div>
+    <!-- JavaScriptの読み込み -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="tweet.js"></script>
+</body>
+</html>
