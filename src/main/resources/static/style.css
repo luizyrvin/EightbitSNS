@@ -1,0 +1,71 @@
+.small-text {
+    font-size: 12px; /* 任意のフォントサイズ */
+}
+.text-gray {
+    color: #888; /* 灰色の文字色 */
+    margin-top: 5px; /* 少し下に配置 */
+}
+.tweet-link {
+    color: inherit; /* 親要素のテキストカラーを継承 */
+    text-decoration: none; /* アンダーラインをなくす */
+}
+
+.tweet-link:hover {
+    color: inherit; /* ホバー時にも親要素のテキストカラーを継承 */
+    text-decoration: none; /* ホバー時のアンダーラインをなくす */
+}
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #007bff;
+}
+
+.tweet-details {
+    margin-top: 20px;
+}
+
+.tweet-details p {
+    margin-bottom: 10px;
+}
+
+.tweet-details span {
+    font-weight: bold;
+    color: #007bff;
+}
+ #toggleTweetForm {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        border-radius: 50%;
+        width: 50px; 
+        height: 50px;
+        padding: 0;
+        font-size: 24px;
+        z-index: 100; /* 他の要素よりも上に表示するための値を設定 ツイート詳細モーダル表示時は隠れる*/
+ }
+ #tweetFormContainer {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        z-index: 9999; /* 他の要素よりも上に表示するための値を設定 */
+        display: none; /* 初期状態では非表示にする */
+    }
