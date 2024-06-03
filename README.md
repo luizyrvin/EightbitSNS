@@ -44,6 +44,11 @@ description<br><br><br>
 |![search](https://github.com/luizyrvin/EightbitSNS/assets/171106589/79e42371-7167-4be3-8812-e154186e3523)|![delete](https://github.com/luizyrvin/EightbitSNS/assets/171106589/55e76592-5547-4da9-aec7-7d8f28ebfa80)|
 |キーワードからツイートを検索する機能です。キーワードが入力されていない場合は「空欄です」と検索バーに表示します。ユーザーのプロフィール画面に遷移すると遷移先のユーザーのツイートのみ表示されます。|ツイートの削除機能です。ツイートに紐づいたコメントやいいねの履歴も連動して削除されます。|
 
+| レスポンシブデザイン対応 |
+|-------------------------|
+|![responsive](https://github.com/luizyrvin/EightbitSNS/assets/171106589/1acc3148-2529-4fb7-8185-61ba4783e56b)|
+|レスポンシブデザインに対応しているため、<br>スマートフォン表示でも操作性を損ないません。|
+
 
 
 
@@ -52,27 +57,75 @@ description<br><br><br>
    - アカウント作成機能：ユーザーはメールアドレスとパスワードを使用して新しいアカウントを作成できます。
    - ログイン機能：登録済みのユーザーはメールアドレスとパスワードを入力してアカウントにログインできます。
    <br><br>
-2. **投稿機能**
-   - ユーザーはテキストツイートを投稿できます。
-   - 投稿にはコメント、いいね、機能が付属します。
-   <br><br>
-3. **プロフィール管理**
-   - ユーザーは自分のプロフィールを表示し、編集できます。
-   - プロフィールにはユーザー名、プロフィール画像、自己紹介文などが含まれます。
-   <br><br>
-4. **タイムライン表示**
-   - ユーザーは社内ユーザーの投稿をタイムラインで閲覧できます。
+2. **タイムライン表示**
+   - 社内ユーザーの投稿をタイムラインで閲覧できます。
    - タイムラインには投稿の詳細表示、コメント、いいねが可能です。
    <br><br>
-4. **検索機能**
-   - ユーザーはフォローしているユーザーの投稿をタイムラインで閲覧できます。
+3. **投稿機能**
+   - テキストツイートを投稿できます。
+   - 投稿にはコメント、いいね機能が付属します。
+   - 投稿主が自分である場合はツイートを削除することができます。
+   <br><br>
+4. **プロフィール管理**
+   - 自分のプロフィールを表示し、編集できます。
+   - プロフィールにはユーザー名、プロフィール画像、自己紹介文などが含まれます。
+   <br><br>
+
+5. **検索機能**
+   - 検索バーからキーワードでツイートを検索することができます。
+   - 他ユーザーのidをクリックするとプロフィール画面へと遷移し、そのユーザーだけの投稿を閲覧することができます。
 <br><br><br><br>
 
 ## MySQLセットアップ
 以下のクエリをMySQLで実行してください。
  ```sql
-CREATE DATABASE hoge;
+CREATE DATABASE your_database;
 
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    tweet_user_id VARCHAR(255),
+    username VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    profile_image_url VARCHAR(255),
+    register_date DATETIME,
+    last_login DATETIME,
+    role VARCHAR(255) DEFAULT 'USER',
+    introduction VARCHAR(255)
+);
+
+CREATE TABLE tweets (
+    tweet_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    username VARCHAR(255),
+    tweet_text VARCHAR(280) NOT NULL,
+    media_file VARCHAR(255),
+    post_date DATETIME,
+    likes INT DEFAULT 0,
+    retweets INT DEFAULT 0,
+    comments INT DEFAULT 0,
+    tweet_user_id VARCHAR(255),
+    profile_image_url VARCHAR(255)
+);
+
+CREATE TABLE comments (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    tweet_id INT,
+    user_id INT,
+    text TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    username VARCHAR(255),
+    tweet_user_id VARCHAR(255)
+);
+
+CREATE TABLE userlikes (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    tweet_id INT,
+    liked TINYINT(1) DEFAULT 0,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (tweet_id) REFERENCES tweets(tweet_id)
+);
  ```
 <br><br><br><br>
 
