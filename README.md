@@ -54,12 +54,15 @@ CREATE DATABASE hoge;
 
 ## 使用技術
 - **フロントエンド**
-  - HTML
-  - CSS
+  ・HTML
+  　　- Thymeleaf(テンプレートエンジン)
+  ・ CSS
+  　  - Bootstrap
+  ・ JavaScript
 
 - **バックエンド**
-  - Java
-  - Spring Boot
+  ・ Java
+     - Spring Boot
 
 - **データベース**
   - MySQL
