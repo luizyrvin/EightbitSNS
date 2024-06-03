@@ -26,7 +26,7 @@ description<br><br><br>
 
 | ログイン機能  | ログアウト機能 |
 |---------------|----------------|
-|![login](https://github.com/luizyrvin/EightbitSNS/assets/171106589/81015c52-f2a9-4935-9453-af4f88dace24)| ![ログアウト機能](画像のURL) |
+|![login](https://github.com/luizyrvin/EightbitSNS/assets/171106589/14896451-e5f2-4931-83ed-71ee6d5cbfbc)|![ログアウト機能](画像のURL) |
 | ログインするための機能です。 | ログアウトするための機能です。 |
 
 
