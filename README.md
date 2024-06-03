@@ -26,8 +26,13 @@ description<br><br><br>
 
 | ログイン機能  | ログアウト機能 |
 |---------------|----------------|
-|![login](https://github.com/luizyrvin/EightbitSNS/assets/171106589/14896451-e5f2-4931-83ed-71ee6d5cbfbc)|![logout](https://github.com/luizyrvin/EightbitSNS/assets/171106589/e3666827-6416-4c27-9e19-48b037be669b)|
-| ログインするための機能です。 | ログアウトするための機能です。 |
+|![login](https://github.com/luizyrvin/EightbitSNS/assets/171106589/08892e67-0da5-45fe-a32b-e92088c0e2e0)|![logout](https://github.com/luizyrvin/EightbitSNS/assets/171106589/1814cf57-4776-4f1a-ade7-0947b4b3a294)|
+| メールアドレスとパスワードでログインを行う機能です。 | マイページからログアウトを行うための機能です。 |
+
+| ユーザー登録機能  | プロフィール編集機能 |
+|---------------|----------------|
+|![register](https://github.com/luizyrvin/EightbitSNS/assets/171106589/e8a6f35c-2d0a-49ac-92f6-f7449b18464c)|![editProfile](https://github.com/luizyrvin/EightbitSNS/assets/171106589/437e8057-9a41-4207-b788-b33d18fc3287)|
+|ユーザーの新規登録機能です。| プロフィール情報を更新するための機能です。<br> 動的なプレビューを表示することで変更後のアイコンも確認することができます。|
 
 
 
