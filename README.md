@@ -112,15 +112,16 @@ CREATE TABLE userlikes (
 
 ## 使用技術
 - **フロントエンド**
-  ・HTML
-  　　- Thymeleaf(テンプレートエンジン)
-  ・ CSS
-  　  - Bootstrap
+  <br><br>
+  ・HTML<br>
+     * Thymeleaf(テンプレートエンジン) ver
+  ・ CSS<br>
+  　 * Bootstrap ver
   ・ JavaScript
 
 - **バックエンド**
   ・ Java
-     - Spring Boot
+     - Spring Boot ver
 
 - **データベース**
   - MySQL
