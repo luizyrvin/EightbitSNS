@@ -33,6 +33,8 @@ public class User {
 	private LocalDateTime lastLogin;
 	@Column(name = "role")
 	private String roles;
+	@Column(name = "introduction")
+	private String introduction;
 	 
 	 
 	 
@@ -90,6 +92,12 @@ public class User {
 	}
 	public void setRoles(String roles) {
 		this.roles = roles;
+	}
+	public String getIntroduction() {
+		return introduction;
+	}
+	public void setIntroduction(String introduction) {
+		this.introduction = introduction;
 	}
 	@Override
 	public String toString() {

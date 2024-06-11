@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,6 +32,7 @@ public class UserService implements UserDetailsService{
     	return userRepo.findById(userId).orElse(null);
     }
     
+    
     public Long getUserIdByUserName(String username) {
     	User user = userRepo.findByUserName(username);
     	if(user != null) {
@@ -43,7 +45,8 @@ public class UserService implements UserDetailsService{
     public Long getUserIdByEmail(String email) {
     	return userRepo.findByEmail(email).get().getUserId();
     }
-
+    
+  
 	public String getTweetUserIdByEmail(String email) {
 		User user = userRepo.findByEmail(email).orElse(null);
 		if(user != null) {
@@ -51,6 +54,15 @@ public class UserService implements UserDetailsService{
 		}
 		return null;
 	}
+	
+//	public String getTweetUserIdByUserId(Long userId) {
+//		User user = userRepo.findByUserId(userId).orElse(null);
+//		if(user != null) {
+//			return user.getTweetUserId();
+//		}
+//		return null;
+//	}
+	
 	
 	public String getUserNameByEmail(String email) {
 		return userRepo.findByEmail(email).get().getUserName();
@@ -106,5 +118,22 @@ public class UserService implements UserDetailsService{
     	return _user.map(user -> new LoginUserDetails(user))
     		.orElseThrow(() -> new UsernameNotFoundException("not found email=" + email));
     }
+    
+
+	public String getUserProfileImageByEmail(String email) {
+		User user = userRepo.findByEmail(email).orElse(null);
+		if(user != null) {
+			return user.getProfileImageUrl();
+		}
+		return null;
+	}
+
+	public String getUserIntroduction(String email) {
+		User user = userRepo.findByEmail(email).orElse(null);
+		if(user != null) {
+			return user.getIntroduction();
+		}
+		return null;
+	}
 
 }

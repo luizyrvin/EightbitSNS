@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>profile</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="icon" href="data:,">
+</head>
+<body>
+    <div class="container mt-5">
+        <div th:each="profile : ${profile}">
+            <div class="d-flex align-items-center">
+                <img th:src="${profile.profileImageUrl}" class="aspect-ratio-1x1" style="width: 70px; height: 70px; border-radius: 50%;" data-toggle="modal" data-target="#profileModal">
+                
+                <!-- プロフィール画像を拡大表示するモーダル -->
+<div class="modal fade" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="profileModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <img th:src="${profile.profileImageUrl}"  style="width: 100%;">
+            </div>
+        </div>
+    </div>
+</div>
+                
+                
+                
+                <div class="ml-3">
+                    <p>
+                        <span th:text="${profile.userName}"></span>
+                        <span th:text="${profile.tweetUserId}"></span>
+                    </p>
+                </div>
+            </div>
+            <div class="ml-3 mt-3">
+                <p th:text="${profile.introduction}"></p>
+            </div>
+        </div>
+        
+        <div class="row justify-content-end mb-3">
+            <!-- ログアウトボタン -->
+            <div th:if="${loginUserId eq profile.UserId}" class="text-right ml-2">
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="btn btn-outline-danger">
+                    <i class="fas fa-sign-out-alt"></i> 
+                </button>
+            </form>
+            </div>
+            <!-- マイページへのリンク -->
+            <div th:if="${loginUserId eq profile.UserId}" class="text-right ml-2">
+                <a th:href="@{/myPage}" class="btn btn-outline-secondary">
+                    <i class="fas fa-cog"></i> 
+                </a>
+            </div>
+        </div>
+        <!-- タイムラインのツイート表示 -->
+        <div class="row">
+            <div class="col-md-6 tweet-card" th:each="tweet : ${userTweets}" onclick="openTweetDetail(this)">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${tweet.getUserName()}"></h5>
+                        <p class="card-text small-text">
+                            投稿者ID: <a th:href="@{'/profile/' + ${tweet.getUserId()}}" class="profile-link" th:text="${tweet.getTweetUserId()}"></a>
+                        </p>
+                        <p class="card-text tweet-content" th:text="${tweet.tweetText}"></p>
+                        <div class="row align-items-center">
+                            <div class="col mt-5">
+                                <!-- いいねボタン -->
+                                <input type="hidden" name="userId" th:value="${loginUserId}">
+                                <input type="hidden" name="tweetId" th:value="${tweet.getTweetId()}">
+                                <button class="btn btn-danger btn-sm like-button" onclick="likeTweet(event,this); return false;">
+                                    <i class="fas fa-heart"></i>
+                                </button>
+                                <!-- いいね数 -->
+                                <span class="ml-2 likes-count" th:text="${tweet.getLikes()}"></span>
+                            </div>
+                            <div class="col mt-5">
+                                <!-- コメントボタン -->
+                                <form th:action="@{/comment}" method="post" class="d-inline">
+                                    <input type="hidden" name="userId" th:value="${tweet.getUserId()}">
+                                    <input type="hidden" name="tweetId" th:value="${tweet.getTweetId()}">
+                                    <button class="btn btn-primary btn-sm comment-button" type="submit" onclick="openCommentFormModal(event, 'commentForm_${tweet.getTweetId()}'); commentTweet(this)">
+                                        <i class="fas fa-comment"></i>
+                                    </button>
+                                </form>
+                                <!-- コメント数 -->
+                                <span class="ml-2" th:text="${tweet.getComments()}"></span>
+                            </div>
+                            <div class="col mt-5">
+                                <!-- リツイートボタン -->
+                                <form id="retweetForm_${tweet.getTweetId()}" class="d-inline" onsubmit="return false;">
+                                    <input type="hidden" name="userId" th:value="${tweet.getUserId()}">
+                                    <input type="hidden" name="tweetId" th:value="${tweet.getTweetId()}">
+                                    <button class="btn btn-success btn-sm retweet-button" type="button" onclick="openRetweetModal('${tweet.getTweetId()}')">
+                                        <i class="fas fa-retweet"></i>
+                                    </button>
+                                </form>
+                                <!-- リツイート数 -->
+                                <span class="ml-2" th:text="${tweet.getRetweets()}"></span>
+                            </div>
+                        </div>
+                        <div class="card-text-container">
+                            <p class="card-text text-sm-right small-text mb-0 text-gray" th:text="${#temporals.format(tweet.getPostDate(), 'M月d日H:mm')}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- JavaScriptの読み込み -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="/profile.js"></script>
+</body>
+</html>

@@ -1,20 +1,28 @@
 package jp.co.eightbit.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import jp.co.eightbit.entity.Tweet;
+import jp.co.eightbit.entity.UserLikes;
 import jp.co.eightbit.repository.TweetRepository;
+import jp.co.eightbit.repository.UserLikesRepository;
 
 @Service
 public class TweetService {
-	private final TweetRepository tweetRepo;
-	
 	@Autowired
+	private final TweetRepository tweetRepo;
+    @Autowired
+    private UserLikesRepository userLikesRepo;
+
+	
+	
 	public TweetService(TweetRepository tweetRepository) {
 		this.tweetRepo = tweetRepository;
 	}
@@ -23,12 +31,26 @@ public class TweetService {
 		return tweetRepo.findAllByOrderByPostDateDesc();
 	}
 	
+
+	
+
+	
 	public List<Tweet> searchTweetsByKeyword(String keyword){
 		return tweetRepo.findByTweetTextContaining(keyword);
 	}
 	
 	public Tweet getTweet(Long tweetId){
 		return tweetRepo.findById(tweetId).orElse(null);
+	}
+
+	public List<Tweet> getRelatedTweets(Long tweetId){
+	    Tweet tweet = tweetRepo.findById(tweetId).orElse(null);
+	    
+	    List<Tweet> relatedTweets = new ArrayList<>();
+	    if(tweet != null) {
+	    	relatedTweets.add(tweet);
+	    }
+	    return relatedTweets;
 	}
 	
 	
@@ -49,14 +71,16 @@ public class TweetService {
 		tweetRepo.deleteById(tweetId);
 	}
 	
-	public void likeTweet(Long userId, Long tweetId) {
-		Tweet tweet = tweetRepo.findById(tweetId).orElse(null);
-		if(tweet != null) {
-			tweet.setLikes(tweet.getLikes() + 1);
-			tweetRepo.save(tweet);
-		}
-	}
-	
+//	public int likeTweet(Long userId, Long tweetId) {
+//		Tweet tweet = tweetRepo.findById(tweetId).orElse(null);
+//		if(tweet != null) {
+//			tweet.setLikes(tweet.getLikes() + 1);
+//			tweetRepo.save(tweet);
+//			return tweet.getLikes(); //いいねの数を返す
+//		}
+//		return 0;  //ツイートが見つからなければ0
+//	}
+//	
 	
 	public void retweet(Long userId, Long tweetId,String tweetUserId) {
 		Tweet originalTweet = tweetRepo.findById(tweetId).orElse(null);
@@ -91,6 +115,109 @@ public class TweetService {
 		
 		tweetRepo.save(tweet);
 	}
+	
+    // いいねを追加するメソッド
+    public void likeTweet(Long userId, Long tweetId) {
+        UserLikes userLikes = new UserLikes(userId, tweetId, true);
+        userLikesRepo.save(userLikes);
+    }	
+    // いいねを解除するメソッド
+    public void unlikeTweet(Long userId, Long tweetId) {
+    	userLikesRepo.deleteByUserIdAndTweetId(userId, tweetId);
+    }
+    // いいねの総数を取得するメソッド
+    public int getLikesCount(Long tweetId) {
+        return userLikesRepo.countByTweetId(tweetId);
+    }
+    public int getCommentsCount(Long tweetId) {
+    	return userLikesRepo.countByTweetId(tweetId);
+    }
+    // ユーザーが指定されたツイートにいいねをしているかどうかを確認するメソッド
+    public boolean isLikedByUser(Long userId, Long tweetId) {
+        return userLikesRepo.existsByUserIdAndTweetId(userId, tweetId);
+    }
+
+	public void saveLike(Long tweetId, Long userId) {
+	    UserLikes userLikes = new UserLikes();
+	    userLikes.setTweetId(tweetId);
+	    userLikes.setUserId(userId);
+	    userLikesRepo.save(userLikes);
+	}
+
+	@Transactional
+	public void incrementLikesCount(Long tweetId, Long userId) {
+		Tweet tweet = tweetRepo.findById(tweetId).orElse(null);
+		if(tweet != null) {
+			int currentLikes = tweet.getLikes();
+			tweet.setLikes(currentLikes + 1);
+			tweetRepo.save(tweet);
+		}
+	}
+
+	public void decrementLikesCount(Long tweetId, Long userId) {
+		Tweet tweet = tweetRepo.findById(tweetId).orElse(null);
+		if(tweet != null) {
+			int currentLikes = tweet.getLikes();
+			tweet.setLikes(currentLikes - 1);
+			tweetRepo.save(tweet);
+		}
+	}
+	
+	public void incrementCommentsCount(Long tweetId, Long userId) {
+		Tweet tweet = tweetRepo.findById(tweetId).orElse(null);
+		if(tweet != null) {
+			int currentComments = tweet.getComments();
+			tweet.setComments(currentComments + 1);
+			tweetRepo.save(tweet);
+		}
+	}
+	
+	public void decrementCommentsCount(Long tweetId, Long userId) {
+		Tweet tweet = tweetRepo.findById(tweetId).orElse(null);
+		if(tweet != null) {
+			int currentComments = tweet.getComments();
+			tweet.setComments(currentComments - 1);
+			tweetRepo.save(tweet);
+		}
+	}
+
+	public List<Tweet> getTweetsByUserId(Long userId) {
+		List<Tweet> userTweets = tweetRepo.findAllByUserId(userId);
+		return userTweets;
+	}
+
+
+
+	
+	
+	
+//	//いいねの追加機能
+//	public void incrementLikesCount(Long tweetId) {
+//		Tweet tweet = tweetRepo.findById(tweetId).orElse(null);
+//		if(tweet != null) {
+//			int currentLikesCount = tweet.getLikes();
+//			if(currentLikesCount < 0) {
+//				tweet.setLikes(currentLikesCount + 1);
+//				tweetRepo.save(tweet);
+//			}
+//		}
+//	}
+//	
+//	
+//	
+//	//いいねの解除機能
+//	public void decrementLikesCount(Long tweetId) {
+//		Tweet tweet = tweetRepo.findById(tweetId).orElse(null);
+//		if(tweet != null) {
+//			int currentLikesCount = tweet.getLikes();
+//			if(currentLikesCount > 0) {
+//				tweet.setLikes(currentLikesCount - 1);
+//				tweetRepo.save(tweet);
+//			}
+//		}
+//	}
+	
+	
 	
 
 	

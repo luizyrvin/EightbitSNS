@@ -15,6 +15,7 @@ public class LoginUserDetails implements UserDetails{
 	private final String password;
 	private final String name;
 	private final Collection <? extends GrantedAuthority> authorities;
+	private final Long userId;
 	
 	public LoginUserDetails(User user) {
 		this.email = user.getEmail();
@@ -23,6 +24,7 @@ public class LoginUserDetails implements UserDetails{
 		this.authorities = Arrays.stream(user.getRoles().split(","))
 				.map(role -> new SimpleGrantedAuthority(role))
 				.toList();
+		this.userId = user.getUserId();
 	}
 	
 	@Override
@@ -43,6 +45,10 @@ public class LoginUserDetails implements UserDetails{
 	
 	public String getName() {
 		return name;
+	}
+	
+	public Long getUserId() {
+		return userId;
 	}
 	
 	@Override
@@ -68,5 +74,7 @@ public class LoginUserDetails implements UserDetails{
 		//ユーザーが有効ならtrueを返す
 		return true;
 	}
+
+	
 	
 }

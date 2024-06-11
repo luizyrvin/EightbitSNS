@@ -20,6 +20,14 @@ body {
     color: #333;
 }
 
+
+.aspect-ratio-1x1 {
+    width: 100px;  /* 任意の幅を設定 */
+    height: 100px; /* 幅と同じ高さを設定 */
+    object-fit: cover;  /* 画像のアスペクト比を保つ */
+    border-radius: 50%; /* 画像を円形にする */
+}
+
 .container {
     max-width: 800px;
     margin: 0 auto;
@@ -46,4 +54,26 @@ h1 {
     font-weight: bold;
     color: #007bff;
 }
-
+ #toggleTweetForm {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        border-radius: 50%;
+        width: 50px; 
+        height: 50px;
+        padding: 0;
+        font-size: 24px;
+        z-index: 9999; /* 他の要素よりも上に表示するための値を設定 ツイート詳細モーダル表示時は隠れる*/
+ }
+ #tweetFormContainer {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        z-index: 0; /* 他の要素よりも上に表示するための値を設定 */
+        display: none; /* 初期状態では非表示にする */
+    }

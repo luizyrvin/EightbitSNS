@@ -22,13 +22,16 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/")  //②
                 .usernameParameter("email")    //③
                 .passwordParameter("password")           //④
-        		)
+                .successHandler((request,response,authentication) -> {
+                	response.sendRedirect("/");
+                })
+                )
         .logout(logout -> logout
         		.logoutSuccessUrl("/login?logout") //⑤
         	    .invalidateHttpSession(true))
         .authorizeHttpRequests(authz -> authz
         		.requestMatchers("/css","/js").permitAll()
-        		.requestMatchers("/register").permitAll()
+        		.requestMatchers("/register","/img/**").permitAll()
         		.anyRequest().authenticated()
         )
         .csrf().disable();
