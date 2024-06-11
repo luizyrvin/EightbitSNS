@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -23,6 +25,14 @@ public class Comments {
 	private String text;
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
+	@Column(name = "username")
+	private String userName;
+	@Column(name = "tweet_user_id")
+	private String tweetUserId;
+	
+	@ManyToOne
+	@JoinColumn(name = "user_id",referencedColumnName = "user_id", insertable = false,updatable = false)
+    private User user;
 	
 //	private String TweetUserId;
 	
@@ -59,7 +69,19 @@ public class Comments {
 		this.createdAt = createdAt;
 	}
 
-//	public String getTweetUserId() {
+public String getUserName() {
+		return user.getUserName();
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getTweetUserId() {
+		return tweetUserId;
+	}
+	public void setTweetUserId(String tweetUserId) {
+		this.tweetUserId = tweetUserId;
+	}
+	//	public String getTweetUserId() {
 //		return TweetUserId;
 //	}
 //	public void setTweetUserId(String tweetUserId) {

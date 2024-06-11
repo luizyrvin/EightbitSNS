@@ -58,13 +58,17 @@ public class CommentController {
 	@PostMapping("/comment")
 	public String postComment(@ModelAttribute("comment") Comments comment, 
 			@RequestParam("userId") Long userId, @RequestParam("tweetId") Long tweetId,
-			@RequestParam("text") String text) {
+			@RequestParam("text") String text,@RequestParam("username") String userName,
+			@RequestParam("tweetUserId")String tweetUserId) {
 //		String tweetUserId = userService.getTweetUserIdByUserId(userId);
 //		
 //		comment.setTweetUserId(tweetUserId);
 		comment.setUser_Id(userId);
 		comment.setTweetId(tweetId);
 		comment.setText(text);
+		comment.setCreatedAt(LocalDateTime.now());
+		comment.setUserName(userName);
+		comment.setTweetUserId(tweetUserId);
 		comment.setCreatedAt(LocalDateTime.now());
 		System.out.println(comment);
 		//DBにコメントを保存

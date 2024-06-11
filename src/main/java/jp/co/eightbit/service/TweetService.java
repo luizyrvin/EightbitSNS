@@ -31,6 +31,10 @@ public class TweetService {
 		return tweetRepo.findAllByOrderByPostDateDesc();
 	}
 	
+
+	
+
+	
 	public List<Tweet> searchTweetsByKeyword(String keyword){
 		return tweetRepo.findByTweetTextContaining(keyword);
 	}
@@ -175,6 +179,11 @@ public class TweetService {
 			tweet.setComments(currentComments - 1);
 			tweetRepo.save(tweet);
 		}
+	}
+
+	public List<Tweet> getTweetsByUserId(Long userId) {
+		List<Tweet> userTweets = tweetRepo.findAllByUserId(userId);
+		return userTweets;
 	}
 
 

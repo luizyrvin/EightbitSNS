@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyPage</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="icon" href="data:,">
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            プロフィール編集
+        </div>
+        
+        <div class="card-body">
+            <form th:action="@{/editProfile}" method="post" enctype="multipart/form-data">
+                <div class="form-group row">
+                    <label for="username" class="col-sm-2 col-form-label">ユーザー名</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="username" name="username" th:value="${username}" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="bio" class="col-sm-2 col-form-label">自己紹介</label>
+                    <div class="col-sm-10">
+                        <textarea class="form-control" id="bio" name="introduction" rows="3" th:text="${introduction}"></textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="profileImage" class="col-sm-2 col-form-label">プロフィール画像</label>
+                    <div class="col-sm-10">
+                        <div class="input-group">
+					        <div class="custom-file">
+						        <input type="file" class="custom-file-input" id="profileImage" name="profileImage" onchange="updatePreview(this)">
+					            <label class="custom-file-label" for="profileImage">ファイルを選択</label>
+					        </div>
+					        <div class="input-group-append">
+					            <img id="previewImage" th:src="${profileImage}" class="rounded-circle ml-3 aspect-ratio-1x1" style="width: 60px; height: 60px;">
+					        </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">更新</button> 
+                <p th:text="${errorMessage}" class="text-center "></p>
+            </form>
+        </div>
+    </div>
+    
+    <div  class="" th:text="${successMessage}"></div>
+ 
+    <!-- 戻る -->
+    <div class="mt-3">
+        <form th:action="@{/}" method="get">
+            <button type="submit" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> 戻る
+            </button>
+        </form>
+    </div>
+</div>
+
+
+
+<!-- JavaScriptの読み込み -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="/myPage.js"></script>
+
+</body>
+</html>

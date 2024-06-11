@@ -21,6 +21,8 @@ public class UserLikes {
 	private boolean liked;
 	
 	
+	
+	
 	public UserLikes() {}
 
 	public UserLikes(Long userId, Long tweetId, boolean liked) {

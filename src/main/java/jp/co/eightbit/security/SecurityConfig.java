@@ -31,7 +31,7 @@ public class SecurityConfig {
         	    .invalidateHttpSession(true))
         .authorizeHttpRequests(authz -> authz
         		.requestMatchers("/css","/js").permitAll()
-        		.requestMatchers("/register").permitAll()
+        		.requestMatchers("/register","/img/**").permitAll()
         		.anyRequest().authenticated()
         )
         .csrf().disable();

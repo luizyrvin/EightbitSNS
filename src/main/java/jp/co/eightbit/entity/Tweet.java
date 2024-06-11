@@ -2,6 +2,8 @@ package jp.co.eightbit.entity;
 
 import java.time.LocalDateTime;
 
+import org.springframework.stereotype.Component;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+@Component
 @Entity
 @Table(name = "tweets")
 public class Tweet {
@@ -36,6 +39,8 @@ public class Tweet {
     private int retweets;
 	@Column(name = "comments")
     private int comments;
+	@Column(name = "profile_image_url")
+	private String profileImageUrl;
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id",referencedColumnName = "user_id", insertable = false,updatable = false)
@@ -64,7 +69,7 @@ public class Tweet {
 		this.userId = userId;
 	}
 	public String getUserName() {
-		return userName;
+		return user.getUserName();
 	}
 	public void setUserName(String userName) {
 		this.userName = userName;
@@ -104,6 +109,12 @@ public class Tweet {
 	}
 	public void setComments(int comments) {
 		this.comments = comments;
+	}
+	public String getProfileImageUrl() {
+		return user.getProfileImageUrl();
+	}
+	public void setProfileImageUrl(String profileImageUrl) {
+		this.profileImageUrl = profileImageUrl;
 	}
 	@Override
 	public String toString() {

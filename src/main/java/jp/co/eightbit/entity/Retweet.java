@@ -28,8 +28,16 @@ public class Retweet {
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 	
+	@Column(name = "message")
+	private String message;
 	
 	
+	
+	
+	public Retweet() {}
+	public Retweet(String message) {
+		this.message = message;
+	}
 	
 
 	public Long getId() {
